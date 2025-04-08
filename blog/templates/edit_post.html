@@ -1,0 +1,10 @@
+<!-- edit_post.html -->
+<h1>Edit Post</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Render form fields -->
+    <button type="submit">Save changes</button>
+</form>
+
+<a href="{% url 'dashboard' %}">Back to dashboard</a>

@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <title>Blog Dashboard</title>
+</head>
+
+<body class="bg-background text-primary-foreground min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-primary shadow-md p-4 fixed w-full z-10">
+        <ul class="flex justify-between items-center">
+            <li><a href="#" class="hover:underline">Home</a></li>
+            <li><a href="#" class="hover:underline">Register</a></li>
+            <li><a href="#" class="hover:underline">Login</a></li>
+            <li><a href="#" class="hover:underline">Dashboard</a></li>
+            <li><a href="#" class="hover:underline">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Welcome Section -->
+    <section class="container mx-auto mt-16 text-center">
+        <h1 class="text-3xl font-semibold">Welcome to your Dashboard, [User/Admin Name]!</h1>
+        <p class="mt-4 text-lg">Manage your blog posts here. Add new posts, edit existing ones, or delete unwanted posts.</p>
+    </section>
+
+    <!-- Create New Post -->
+    <section class="container mx-auto mt-8">
+        <h2 class="text-xl font-semibold">Create New Post</h2>
+        <form id="postForm" class="bg-card mt-4 p-4 rounded-lg">
+            <input type="text" id="authorName" placeholder="Author Name" class="w-full bg-input text-primary-foreground px-3 py-2 rounded mb-2" required>
+            <input type="text" id="postTitle" placeholder="Post Title" class="w-full bg-input text-primary-foreground px-3 py-2 rounded mb-2" required>
+            <textarea id="postContent" placeholder="Post Content" class="w-full bg-input text-primary-foreground px-3 py-2 rounded mb-2 h-32" required></textarea>
+            <button type="button" id="savePost" class="bg-primary text-primary-foreground px-4 py-2 rounded mt-2">Save Post</button>
+        </form>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <section class="container mx-auto mt-8">
+        <h2 class="text-xl font-semibold">Your Blog Posts</h2>
+        <ul id="postsList" class="mt-4">
+            <!-- Dynamically generated posts will appear here -->
+        </ul>
+    </section>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        const postForm = document.getElementById('postForm');
+        const postsList = document.getElementById('postsList');
+
+        document.getElementById('savePost').addEventListener('click', function () {
+            const authorName = document.getElementById('authorName').value.trim();
+            const postTitle = document.getElementById('postTitle').value.trim();
+            const postContent = document.getElementById('postContent').value.trim();
+
+            if (!authorName || !postTitle || !postContent) {
+                alert('All fields are required!');
+                return;
+            }
+
+            const postId = Date.now(); // Unique ID for the post
+
+            // Create a new post element
+            const postElement = document.createElement('li');
+            postElement.classList.add('bg-card', 'p-4', 'rounded-lg', 'mb-4');
+            postElement.setAttribute('data-id', postId);
+
+            postElement.innerHTML = `
+                <div class="flex items-center justify-between border-b border-border py-2">
+                    <div>
+                        <h3 class="text-lg">${postTitle}</h3>
+                        <p class="text-sm text-muted">By ${authorName}</p>
+                    </div>
+                    <button class="bg-destructive text-destructive-foreground px-2 py-1 rounded deletePost">Delete</button>
+                </div>
+                <p class="mt-2">${postContent}</p>
+            `;
+
+            // Append to the list
+            postsList.appendChild(postElement);
+
+            // Clear form
+            postForm.reset();
+        });
+
+        // Delete post functionality
+        postsList.addEventListener('click', function (e) {
+            if (e.target.classList.contains('deletePost')) {
+                const postElement = e.target.closest('li');
+                postElement.remove();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
